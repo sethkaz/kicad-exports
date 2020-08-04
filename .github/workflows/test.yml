@@ -5,29 +5,27 @@ on:
     branches:
       - master
       - develop
-      - dev/wip
   pull_request:
     branches:
       - master
       - develop
-      - dev/wip
 
 jobs:
-  schematic:
+  schematics:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - name: kicad-exports schematic docs
-      uses: ./
+    - name: kicad-exports schematics
+      uses: nerdyscout/kicad-exports@develop
       with:
         config: schematics.kiplot.yaml
-        dir: test/docs
+        dir: test
         board: test/test.kicad_pcb
         schema: test/test.sch
-    - name: kicad-schematic
+    - name: "check output: schematics"
       uses: andstor/file-existence-action@v1
       with:
-        files: "test/docs/test_schematic.svg, test/docs/test_schematic.pdf"
+        files: "test/docs/*.svg, test/docs/*.pdf"
     - uses: actions/upload-artifact@v2
       if: success()
       with:
@@ -38,40 +36,40 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - name: kicad-exports ibom docs/bom
-      uses: joaoantoniocardoso/kicad-exports@dev/wip
+    - name: kicad-exports bom
+      uses: nerdyscout/kicad-exports@develop
       with:
         config: bom.kiplot.yaml
-        dir: test/docs/bom
+        dir: test
         board: test/test.kicad_pcb
         schema: test/test.sch
     - name: "check output: bom"
       if: success()
       uses: andstor/file-existence-action@v1
       with:
-        files: "test/docs/bom/ibom.html, test/docs/bom/test.csv, test/docs/bom/test.xlsx"
+        files: "test/docs/bom/*.html, test/docs/bom/*.csv, test/docs/bom/*.xlsx"
     - uses: actions/upload-artifact@v2
       if: success()
       with:
         name: bom
         path: test/docs/bom/*
 
-  fabrication:
+  fabrications:
     runs-on: ubuntu-latest
-    continue-on-error: true
+    # continue-on-error: true
     steps:
     - uses: actions/checkout@v2
-    - name: kicad-exports fabrication gerber
-      uses: joaoantoniocardoso/kicad-exports@dev/wip
+    - name: kicad-exports fabrications 
+      uses: nerdyscout/kicad-exports@develop
       with:
-        config: fabrication.kiplot.yaml
-        dir: test/gerber
+        config: fabrications.kiplot.yaml
+        dir: test
         board: test/test.kicad_pcb
         schema: test/test.sch
     - name: "check output: kiplot-position"
       uses: andstor/file-existence-action@v1
       with:
-        files: "test/gerber/test-both-pos.csv"
+        files: "test/gerber/*both-pos.csv"
     - name: "check output: kiplot-drills"
       uses: andstor/file-existence-action@v1
       with:
@@ -88,41 +86,16 @@ jobs:
         name: gerber
         path: test/gerber/*
 
-#  report:
-#    runs-on: ubuntu-latest
-#    continue-on-error: true
-#    steps:
-#    - uses: actions/checkout@v2
-#    - name: kicad-exports report
-#      uses: joaoantoniocardoso/kicad-exports@dev/wip
-#      with:
-#        config: report.kiplot.yaml
-#        dir: test
-#        schema: test/test.sch
-#        board: test/test.kicad_pcb
-#    - name: "check output: erc"
-#      uses: andstor/file-existence-action@v1
-#      with:
-#        files: "test/test.erc"
-#    - name: "check output: drc"
-#      uses: andstor/file-existence-action@v1
-#      with:
-#        files: "test/test.rpt"
-#    - uses: actions/upload-artifact@v2
-#      with:
-#        name: report
-#        path: test/
-
-#  tracespace:
+#  plot:
 #    runs-on: ubuntu-latest
 #    continue-on-error: true
 #    steps:
 #    - uses: actions/checkout@v2
 #    - name: kicad-exports tracespace-board
-#      uses: joaoantoniocardoso/kicad-exports@dev/wip
+#      uses: nerdyscout/kicad-exports@develop
 #      with:
 #        config: tracespace-board.kiplot.yaml
-#        dir: test/docs/img
+#        dir: test
 #        schema: test/test.sch
 #        board: test/test.kicad_pcb
 #    - name: "check output: tracespace-board"
@@ -131,10 +104,10 @@ jobs:
 #        files: "test/docs/img/test_Board_Top.svg, test/docs/img/test_Board_Bottom.svg"
 #
 #    - name: kicad-exports tracespace-assembly
-#      uses: joaoantoniocardoso/kicad-exports@dev/wip
+#      uses: nerdyscout/kicad-exports@develop
 #      with:
 #        config: test/tracespace-assembly.kiplot.yaml
-#        dir: test/docs/img
+#        dir: test
 #        schema: test/test.sch
 #        board: test/test.kicad_pcb
 #    - name: "check output: tracespace-assembly"

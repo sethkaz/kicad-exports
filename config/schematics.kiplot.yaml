@@ -8,11 +8,7 @@ outputs:
   - name: 'print schema'
     comment: "Print schematic (PDF)"
     type: pdf_sch_print
-    options:
-      output: '%p-Schematic%r.%x'
 
   - name: 'print schema'
     comment: "Print schematic (SVG)"
     type: svg_sch_print
-    options:
-      output: '%p-Schematic%r.%x'
