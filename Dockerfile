@@ -4,7 +4,9 @@ LABEL Description="export various files from KiCad projects"
 LABEL VERSION="v2.0"
 
 RUN apt-get update
-RUN apt-get install -y python3-pip python3-yaml xvfb xclip xdotool xsltproc git libmagickwand-dev python3-cairo recordmydesktop
+RUN apt-get install -y python3-pip python3-yaml xvfb xclip \
+    xdotool xsltproc git libmagickwand-dev python3-cairo \
+    recordmydesktop python3-wxgtk4.0 imagemagick poppler-utils xdg-utils
 
 # InteractiveHtmlBom
 COPY submodules/InteractiveHtmlBom/InteractiveHtmlBom /opt/InteractiveHtmlBom/
@@ -17,6 +19,9 @@ COPY submodules/PcbDraw-Lib/KiCAD-base /opt/pcbdraw/lib/
 RUN cd /opt/pcbdraw && python3 setup.py install
 # kicad-git-filters
 COPY submodules/kicad-git-filters /opt/git-filters/
+# kicad-pcb_diff
+COPY submodules/kicad-pcb_diff /opt/pcb-diff/
+RUN cd /opt/pcb-diff/ && make install
 # kiplot
 COPY submodules/kiplot /opt/kiplot/
 COPY config/*.kiplot.yaml /opt/kiplot/docs/samples/
