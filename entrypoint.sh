@@ -43,13 +43,14 @@ function msg_illegal_arg {
 function msg_help {
 	echo -e "Mandatory arguments:"
     echo -e "  -c, --config FILE .kiplot.yaml config file"
+    echo -e "OR"
+    echo -e "  -d, --diff git commit HASH to be compared against latest hash."
 
 	echo -e "\nOptional control arguments:"
     echo -e "  -o, --out DIR output path. Default: current dir, will be used as prefix of dir configured in config file"
     echo -e "  -b, --board FILE .kicad_pcb board file. Default: first board file found in current folder."
     echo -e "  -e, --schema FILE .sch schematic file.  Default: first schematic file found in current folder."
-    echo -e "  -s, --skip Skip preflights, comma separated or `all`"
-#    echo -e "  -d, --diff HASH - TODO"
+    echo -e "  -s, --skip Skip preflights, comma separated or 'all'"
 
 	echo -e "\nMiscellaneous:"
     echo -e "  -v, --verbose annotate program execution"
@@ -135,7 +136,7 @@ function args_process {
                OUT="-d $1"
                ;;
            -d | --diff ) shift
-               DIFF="TODO"
+               DIFF="$1"
                ;;
            -s | --skip) shift
                SKIP="-s $1"
@@ -161,7 +162,7 @@ function args_process {
 }
 
 function run {
-    CONFIG="$(echo "$CONFIG" | tr -d '[:space:]')"
+#    CONFIG="$(echo "$CONFIG" | tr -d '[:space:]')"
 
     if [ -d .git ]; then
         # git-filter
@@ -173,16 +174,25 @@ function run {
         fi
 
         # pcb-diff
-#        if [ -n $DIFF ]; then
-#
-#            diffexec="/opt/pcb-diff/kicad_pcb-git-diff.py"
-#            if [ -f $diffexec ]; then
-#                python3 $diffexec
-#            else
-#                echo -e "warning: $diffexec not found!"
-#            fi
-#            exit
-#        fi
+        if [ -n $DIFF ]; then # TODO if [ $DIFF == within git history ]
+            if [ ! -f ".kicad_pcb-git-diff" ]; then
+                diffinit="/usr/local/bin/kicad_pcb-diff-init.py"
+                if [ -f $diffinit ]; then
+                    python3 $diffinit
+                else
+                    echo -e "warning: $diffinit not found!"
+                fi
+            else
+                diffrun="/usr/local/bin/kicad_pcb-diff.py"
+                if [ -f $diffrun ]; then
+                    current_hash=$(git rev-parse HEAD)
+                    python3 $diffrun $VERBOSE --output_dir "diff" --new_pcb_hash "$current_hash" --old_pcb_hash "$DIFF" ProMicro_TEST.kicad_pcb ProMicro_TEST.kicad_pcb
+                else
+                    echo -e "warning: $diffrun not found!"
+                fi
+            fi
+            exit
+        fi
     fi
 
     samples="/opt/kiplot/docs/samples"
