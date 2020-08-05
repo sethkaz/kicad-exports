@@ -11,14 +11,15 @@ margs=1
 CONFIG=""
 BOARD=""
 SCHEMA=""
+OUT=""
 SKIP=""
-DIR=""
+DIFF=""
 
 # Exit error code
 EXIT_ERROR=1
 
 function msg_example {
-    echo -e "example: $SCRIPT -d docs -b example.kicad_pcb -e example.sch -c docs.kiplot.yaml"
+    echo -e "example: $SCRIPT -o docs -b example.kicad_pcb -e example.sch -c docs.kiplot.yaml"
 }
 
 function msg_usage {
@@ -44,10 +45,11 @@ function msg_help {
     echo -e "  -c, --config FILE .kiplot.yaml config file"
 
 	echo -e "\nOptional control arguments:"
-    echo -e "  -d, --dir DIR output path. Default: current dir, will be used as prefix of dir configured in config file"
+    echo -e "  -o, --out DIR output path. Default: current dir, will be used as prefix of dir configured in config file"
     echo -e "  -b, --board FILE .kicad_pcb board file. Default: first board file found in current folder."
     echo -e "  -e, --schema FILE .sch schematic file.  Default: first schematic file found in current folder."
     echo -e "  -s, --skip Skip preflights, comma separated or `all`"
+#    echo -e "  -d, --diff HASH - TODO"
 
 	echo -e "\nMiscellaneous:"
     echo -e "  -v, --verbose annotate program execution"
@@ -126,11 +128,14 @@ function args_process {
            -b | --board ) shift
                BOARD="-b $1"
                ;;
-           -e | --schematic ) shift
+           -e | --schema ) shift
                SCHEMA="-e $1"
                ;;
-           -d | --dir) shift
-               DIR="-d $1"
+           -o | --out ) shift
+               OUT="-d $1"
+               ;;
+           -d | --diff ) shift
+               DIFF="TODO"
                ;;
            -s | --skip) shift
                SKIP="-s $1"
@@ -159,23 +164,37 @@ function run {
     CONFIG="$(echo "$CONFIG" | tr -d '[:space:]')"
 
     if [ -d .git ]; then
+        # git-filter
         filter="/opt/git-filters/kicad-git-filters.py"
         if [ -f $filter ]; then
             python3 $filter
         else
             echo -e "warning: $filter not found!"
         fi
+
+        # pcb-diff
+#        if [ -n $DIFF ]; then
+#
+#            diffexec="/opt/pcb-diff/kicad_pcb-git-diff.py"
+#            if [ -f $diffexec ]; then
+#                python3 $diffexec
+#            else
+#                echo -e "warning: $diffexec not found!"
+#            fi
+#            exit
+#        fi
     fi
 
+    samples="/opt/kiplot/docs/samples"
     if [ -f $CONFIG ]; then
-        kiplot -c $CONFIG $DIR $BOARD $SCHEMA $SKIP $VERBOSE
-    elif [ -f "/opt/kiplot/docs/samples/$CONFIG" ]; then
-        kiplot -c /opt/kiplot/docs/samples/$CONFIG $DIR $BOARD $SCHEMA $SKIP $VERBOSE
+        kiplot -c $CONFIG $OUT $BOARD $SCHEMA $SKIP $VERBOSE
+    elif [ -f "$samples/$CONFIG" ]; then
+        kiplot -c "$samples/$CONFIG" $OUT $BOARD $SCHEMA $SKIP $VERBOSE
     else
         echo "config file '$CONFIG' not found! Please pass own file or choose from:"
-        cd /opt/kiplot/docs/samples/
+        cd $samples
         ls -1 *.yaml
-        exit 1
+        exit $EXIT_ERROR
     fi 
 }
 

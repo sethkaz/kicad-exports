@@ -4,7 +4,9 @@ LABEL Description="export various files from KiCad projects"
 LABEL VERSION="v2.0"
 
 RUN apt-get update
-RUN apt-get install -y python3-pip python3-yaml xvfb xclip xdotool xsltproc git libmagickwand-dev python3-cairo recordmydesktop
+RUN apt-get install -y python3-pip python3-yaml xvfb xclip \
+    xdotool xsltproc git libmagickwand-dev python3-cairo \
+    recordmydesktop python3-wxgtk4.0 imagemagick poppler-utils xdg-utils
 
 # InteractiveHtmlBom
 COPY submodules/InteractiveHtmlBom/InteractiveHtmlBom /opt/InteractiveHtmlBom/
@@ -18,6 +20,9 @@ COPY styles/*.json /opt/pcbdraw/styles/
 RUN cd /opt/pcbdraw && python3 setup.py install
 # kicad-git-filters
 COPY submodules/kicad-git-filters /opt/git-filters/
+# kicad-pcb_diff
+COPY submodules/kicad_pcb-diff /opt/pcb-diff/
+RUN cd /opt/pcb-diff/ && make install
 # kiplot
 COPY submodules/kiplot /opt/kiplot/
 COPY config/*.kiplot.yaml /opt/kiplot/docs/samples/
@@ -26,6 +31,8 @@ RUN pip3 install -e /opt/kiplot
 COPY submodules/kicad-automation-scripts /opt/kicad-automation/
 RUN pip3 install -r /opt/kicad-automation/src/requirements.txt
 RUN cd /opt/kicad-automation && python3 setup.py install
+
+RUN apt-get autoremove -y && apt-get clean
 
 COPY ./entrypoint.sh /entrypoint.sh
 RUN chmod +x ./entrypoint.sh

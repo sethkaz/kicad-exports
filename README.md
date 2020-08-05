@@ -25,7 +25,7 @@ on:
         # Required - plotting config file
           config: docs.kiplot.yaml
         # optional - output directory
-          dir: docs
+          out: docs
         # optional - schematic file
           schema: *.sch
         # optional - PCB design file
@@ -53,7 +53,7 @@ make && make install
 go to your KiCad project folder and run kicad-exports
 ```
 cd /my/kicad/example-project
-kicad-exports -d $DIR_OUT -e $SCHEMA -b $BOARD -c $CONFIG 
+kicad-exports -o $OUT -e $SCHEMA -b $BOARD -c $CONFIG 
 ```
 
 ### run with predefined example config
@@ -73,3 +73,4 @@ kicad-exports -c myconfig.kiplot.yaml
 - [kicad-automation-scripts](https://github.com/INTI-CMNB/kicad-automation-scripts)
 - [PcbDraw](https://github.com/yaqwsx/PcbDraw)
 - [kicad-git-filters](https://github.com/INTI-CMNB/kicad-git-filters)
+- [kicad_pcb-diff](https://github.com/INTI-CMNB/kicad_pcb-diff)

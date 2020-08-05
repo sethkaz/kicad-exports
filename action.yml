@@ -5,7 +5,7 @@ inputs:
   config:
     description: 'The plotting config file to use'
     required: true
-  dir:
+  out:
     description: 'The output directory [default: .]'
     required: false
     default: '.'
@@ -22,7 +22,7 @@ runs:
   image: docker://nerdyscout/kicad-exports:develop
   args:
     -  -c ${{ inputs.config }}
-    -  -d ${{ inputs.dir }}
+    -  -o ${{ inputs.out }}
     -  -b ${{ inputs.board }}
     -  -e ${{ inputs.schema }}
 branding:
