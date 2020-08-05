@@ -14,6 +14,7 @@ RUN cd /opt/kibom && python3 setup.py install
 # pcbdraw
 COPY submodules/PcbDraw /opt/pcbdraw/
 COPY submodules/PcbDraw-Lib/KiCAD-base /opt/pcbdraw/lib/
+COPY styles/*.json /opt/pcbdraw/styles/
 RUN cd /opt/pcbdraw && python3 setup.py install
 # kicad-git-filters
 COPY submodules/kicad-git-filters /opt/git-filters/
