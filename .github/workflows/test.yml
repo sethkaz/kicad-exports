@@ -11,21 +11,22 @@ on:
       - develop
 
 jobs:
-  schematics:
+  docs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - name: kicad-exports schematics
+    - name: kicad-exports docs
       uses: nerdyscout/kicad-exports@develop
       with:
-        config: schematics.kiplot.yaml
+        config: docs.kiplot.yaml
         dir: test
         board: test/test.kicad_pcb
         schema: test/test.sch
-    - name: "check output: schematics"
-      uses: andstor/file-existence-action@v1
-      with:
-        files: "test/docs/*.svg, test/docs/*.pdf"
+    - name: "check output: docs"
+      run: |
+        test -f test/docs/test-Schematic*.svg &&
+        test -f test/docs/test-Schematic*.pdf && 
+        test -f test/docs/test-Board*.pdf
     - uses: actions/upload-artifact@v2
       if: success()
       with:
@@ -44,10 +45,10 @@ jobs:
         board: test/test.kicad_pcb
         schema: test/test.sch
     - name: "check output: bom"
-      if: success()
-      uses: andstor/file-existence-action@v1
-      with:
-        files: "test/docs/bom/*.html, test/docs/bom/*.csv, test/docs/bom/*.xlsx"
+      run: |
+        test -f test/docs/bom/test*.html &&
+        test -f test/docs/bom/test*.csv && 
+        test -f test/docs/bom/test*.xlsx
     - uses: actions/upload-artifact@v2
       if: success()
       with:
@@ -56,7 +57,7 @@ jobs:
 
   fabrications:
     runs-on: ubuntu-latest
-    # continue-on-error: true
+    continue-on-error: true
     steps:
     - uses: actions/checkout@v2
     - name: kicad-exports fabrications 
@@ -66,56 +67,35 @@ jobs:
         dir: test
         board: test/test.kicad_pcb
         schema: test/test.sch
-    - name: "check output: kiplot-position"
-      uses: andstor/file-existence-action@v1
-      with:
-        files: "test/gerber/*both-pos.csv"
-    - name: "check output: kiplot-drills"
-      uses: andstor/file-existence-action@v1
-      with:
-        files: "test/gerber/test-PTH.drl, test/gerber/test-NPTH.drl"
-    - uses: andstor/file-existence-action@v1
-      with:
-        files: "test/gerber/test-PTH-drl.gbr, test/gerber/test-NPTH-drl.gbr"
-    - name: "check output: kiplot-gerber"
-      uses: andstor/file-existence-action@v1
-      with:
-        files: "test/gerber/test-Edge_Cuts.gbr, test/gerber/test-F_Cu.gbr, test/gerber/test-B_SilkS.gbr"
+    - name: "check output: fabrications"
+      run: |
+        test -f test/gerbers/testboth-pos.csv &&
+        test -f test/gerbers/test-PTH.drl && 
+        test -f test/gerbers/test-NPTH.drl
+        test -f test/gerbers/test-Edge_Cuts.gbr &&
+        test -f test/gerbers/test-F_Cu.gbr && 
+        test -f test/gerbers/test-B_SilkS.gbr
     - uses: actions/upload-artifact@v2
       with:
-        name: gerber
-        path: test/gerber/*
+        name: gerbers
+        path: test/gerbers/*
 
-#  plot:
-#    runs-on: ubuntu-latest
-#    continue-on-error: true
-#    steps:
-#    - uses: actions/checkout@v2
-#    - name: kicad-exports tracespace-board
-#      uses: nerdyscout/kicad-exports@develop
-#      with:
-#        config: tracespace-board.kiplot.yaml
-#        dir: test
-#        schema: test/test.sch
-#        board: test/test.kicad_pcb
-#    - name: "check output: tracespace-board"
-#      uses: andstor/file-existence-action@v1
-#      with:
-#        files: "test/docs/img/test_Board_Top.svg, test/docs/img/test_Board_Bottom.svg"
-#
-#    - name: kicad-exports tracespace-assembly
-#      uses: nerdyscout/kicad-exports@develop
-#      with:
-#        config: test/tracespace-assembly.kiplot.yaml
-#        dir: test
-#        schema: test/test.sch
-#        board: test/test.kicad_pcb
-#    - name: "check output: tracespace-assembly"
-#      uses: andstor/file-existence-action@v1
-#      with:
-#        files: "test/docs/img/test_Assembly_Top.svg, test/docs/img/test_Assembly_Bottom.svg"
-#
-#    - uses: actions/upload-artifact@v2
-#      with:
-#        name: images
-#        path: test/docs/img/*
+  plot:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: kicad-exports plot
+      uses: nerdyscout/kicad-exports@develop
+      with:
+        config: plot.kiplot.yaml
+        dir: test
+        schema: test/test.sch
+        board: test/test.kicad_pcb
+    - name: "check output: tracespace-board"
+      run: |
+        test -f test/docs/img/test_Board_Top.svg &&
+        test -f test/docs/img/test_Board_Bottom.svg 
+    - uses: actions/upload-artifact@v2
+      with:
+        name: img
+        path: test/docs/img/*
