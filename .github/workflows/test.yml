@@ -76,6 +76,7 @@ jobs:
         test -f test/gerbers/test-F_Cu.gbr && 
         test -f test/gerbers/test-B_SilkS.gbr
     - uses: actions/upload-artifact@v2
+      if: success()
       with:
         name: gerbers
         path: test/gerbers/*
@@ -96,6 +97,7 @@ jobs:
         test -f test/docs/img/test_Board_Top.svg &&
         test -f test/docs/img/test_Board_Bottom.svg 
     - uses: actions/upload-artifact@v2
+      if: success()
       with:
         name: img
         path: test/docs/img/*

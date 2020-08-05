@@ -17,7 +17,7 @@ outputs:
       highlight_pin1: true
       no_redraw_on_drag: true
       board_rotation: 0
-      checkboxes: 'Sourced,Placed,Bogus'
+      checkboxes: 'Sourced,Placed'
       include_tracks: true
       include_nets: true
       sort_order: 'C,R,L,D,U,Y,X,F,SW,A,~,HS,CNN,J,P,NT,MH'
@@ -28,7 +28,7 @@ outputs:
       normalize_field_case: true
       dnp_field: 'DNP'
       name_format: ''
-      output: '%f-%r.%x'
+      #output: '%f-%r.%x'
 
   # KiBoM (KiCad Bill of Materials):
   # For more information: https://github.com/INTI-CMNB/KiBoM
@@ -43,7 +43,7 @@ outputs:
       # [number=1] Number of boards to build (components multiplier)
       number: 1
       # [string='%f-%i.%x'] filename for the output (%i=bom). Affected by global options
-      output: '%f-%r.%x'
+      #output: '%f-%r.%x'
 
   # KiBoM (KiCad Bill of Materials):
   # For more information: https://github.com/INTI-CMNB/KiBoM
@@ -58,7 +58,7 @@ outputs:
       # [number=1] Number of boards to build (components multiplier)
       number: 1
       # [string='%f-%i.%x'] filename for the output (%i=bom). Affected by global options
-      output: '%f-%r.%x'
+      #output: '%f-%r.%x'
       # [string=','] CSV Separator
       separator: ';'
     
