@@ -19,7 +19,7 @@ jobs:
       uses: nerdyscout/kicad-exports@develop
       with:
         config: docs.kiplot.yaml
-        dir: test
+        out: test
         board: test/test.kicad_pcb
         schema: test/test.sch
     - name: "check output: docs"
@@ -41,7 +41,7 @@ jobs:
       uses: nerdyscout/kicad-exports@develop
       with:
         config: bom.kiplot.yaml
-        dir: test
+        out: test
         board: test/test.kicad_pcb
         schema: test/test.sch
     - name: "check output: bom"
@@ -64,7 +64,7 @@ jobs:
       uses: nerdyscout/kicad-exports@develop
       with:
         config: fabrications.kiplot.yaml
-        dir: test
+        out: test
         board: test/test.kicad_pcb
         schema: test/test.sch
     - name: "check output: fabrications"
@@ -89,7 +89,7 @@ jobs:
       uses: nerdyscout/kicad-exports@develop
       with:
         config: plot.kiplot.yaml
-        dir: test
+        out: test
         schema: test/test.sch
         board: test/test.kicad_pcb
     - name: "check output: tracespace-board"
