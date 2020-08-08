@@ -31,6 +31,6 @@ RUN apt-get autoremove -y && apt-get clean
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
-WORKDIR /mnt
+#WORKDIR /mnt
 
 ENTRYPOINT [ "/entrypoint.sh" ]
