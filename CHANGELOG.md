@@ -15,3 +15,6 @@ V2.0
 - removed kicad-diff
 - currently no kikit support anymore, would like to get it somehow back
 - much better entrypoint.sh - big thx to @joaoantoniocardoso
+
+V2.0b
+use https://github.com/INTI-CMNB/kicad_auto instead of pulling all tools by myself.

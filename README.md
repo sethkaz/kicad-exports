@@ -54,7 +54,9 @@ go to your KiCad project folder and run kicad-exports
 cd /my/kicad/example-project
 kicad-exports -d $DIR_OUT -e $SCHEMA -b $BOARD -c $CONFIG 
 ```
+<!--
 :warning: running any command your git repository will be modified using [kicad-git-filters](https://github.com/INTI-CMNB/kicad-git-filters/tree/v1.0.1).
+-->
 
 ### run with predefined example config
 ```

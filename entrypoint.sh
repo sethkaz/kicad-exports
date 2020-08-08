@@ -2,7 +2,7 @@
 
 # Script configurations
 SCRIPT="kicad-exports"
-VERSION="2.0"
+VERSION="2.0b"
 
 # Mandatory arguments
 margs=1
@@ -158,29 +158,29 @@ function args_process {
 function run {
     CONFIG="$(echo "$CONFIG" | tr -d '[:space:]')"
 
-#    if [ $CI ]; then
-#        VERBOSE="-v"
-#    fi
-
-    if [ -d .git ]; then
-        filter="/opt/git-filters/kicad-git-filters.py"
-        if [ -f $filter ]; then
-            python3 $filter
-        else
-            echo -e "warning: $filter not found!"
-        fi
+    if [ $CI ]; then
+        VERBOSE="-v"
     fi
 
-    if [ -f $CONFIG ]; then
+#    if [ -d .git ]; then
+#        filter="/opt/git-filters/kicad-git-filters.py"
+#        if [ -f $filter ]; then
+#            python3 $filter
+#        else
+#            echo -e "warning: $filter not found!"
+#        fi
+#    fi
+
+#    if [ -f $CONFIG ]; then
         kiplot -c $CONFIG $DIR $BOARD $SCHEMA $SKIP $VERBOSE
-    elif [ -f "/opt/kiplot/docs/samples/$CONFIG" ]; then
-        kiplot -c /opt/kiplot/docs/samples/$CONFIG $DIR $BOARD $SCHEMA $SKIP $VERBOSE
-    else
-        echo "config file '$CONFIG' not found! Please pass own file or choose from:"
-        cd /opt/kiplot/docs/samples/
-        ls -1 *.yaml
-        exit $EXIT_ERROR
-    fi 
+#    elif [ -f "/opt/kiplot/docs/samples/$CONFIG" ]; then
+#        kiplot -c /opt/kiplot/docs/samples/$CONFIG $DIR $BOARD $SCHEMA $SKIP $VERBOSE
+#    else
+#        echo "config file '$CONFIG' not found! Please pass own file or choose from:"
+#        cd /opt/kiplot/docs/samples/
+#        ls -1 *.yaml
+#        exit $EXIT_ERROR
+#    fi 
 }
 
 function main {
